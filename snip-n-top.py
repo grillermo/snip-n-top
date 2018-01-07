@@ -22,6 +22,9 @@ from PyQt5.QtWidgets import (
         QLabel
         )
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeyEvent
+from time import sleep
+
 import sys
 
 
@@ -49,10 +52,10 @@ class SnipNTop(QWidget):
                     pixmap.scaled(pixmap.width() / 2, pixmap.height() / 2)
                     )
 
-            button = QPushButton('Copiar y cerrar', self)
+            button = QPushButton('Copiar y cerrar (esc)', self)
             splitter.addWidget(lbl)
         else:
-            button = QPushButton('cerrar', self)
+            button = QPushButton('cerrar (esc)', self)
 
         button.clicked.connect(self.copy_and_exit)
         button.setFocusPolicy(Qt.NoFocus)
@@ -72,7 +75,23 @@ class SnipNTop(QWidget):
 
     def copy_and_exit(self, event):
         self.clipboard().setText(self.textEdit.toPlainText())
+        sleep(0.1)
         return self.close()
+
+    def keyPressEvent(self, event):
+        if type(event) == QKeyEvent:
+            event.accept()
+            self.close_on_esc(event)
+        else:
+            event.ignore()
+
+    def close_on_esc(self, event):
+        self.setWindowTitle(str(event.key()))
+        if event.key() == self.esc_key():
+            self.copy_and_exit(event)
+
+    def esc_key(self):
+        return 16777216
 
 
 if __name__ == '__main__':

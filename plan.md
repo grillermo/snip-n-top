@@ -1,3 +1,7 @@
+Script de python con PyQt que facilita transcribir manualmente el contenido de una imagen copiada en el clipboard.
+
+Diseñada para integrarse en mi flujo de trabajo.
+
 **Stack**
 
 PyQT5
