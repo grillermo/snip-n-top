@@ -18,11 +18,11 @@ from PyQt5.QtWidgets import (
         QTextEdit,
         QSplitter,
         QVBoxLayout,
-        QPushButton
+        QPushButton,
+        QLabel
         )
-from PyQt5.QtCore import Qt, QCoreApplication, QSize
+from PyQt5.QtCore import Qt
 import sys
-from PyQt5.QtGui import QIcon
 
 
 class SnipNTop(QWidget):
@@ -32,33 +32,36 @@ class SnipNTop(QWidget):
 
         self.initUI()
 
+    def clipboard(self):
+        return QApplication.clipboard()
+
     def initUI(self):
         hbox = QVBoxLayout(self)
         hbox.setSpacing(0)
         hbox.setContentsMargins(0, 0, 0, 0)
-        pixmap = QApplication.clipboard().pixmap()
+        pixmap = self.clipboard().pixmap()
 
         splitter = QSplitter(Qt.Vertical)
 
         if pixmap:
-            button = QPushButton('', self)
-            button.setIcon(QIcon(pixmap))
-            button.isFlat = True
-            button.setIconSize(
-                    QSize(
-                        pixmap.width() / 2,
-                        pixmap.height() / 2
-                        )
+            lbl = QLabel(self)
+            lbl.setPixmap(
+                    pixmap.scaled(pixmap.width() / 2, pixmap.height() / 2)
                     )
 
-            button.clicked.connect(QCoreApplication.instance().quit)
-            button.setFocusPolicy(Qt.NoFocus)
-            splitter.addWidget(button)
+            button = QPushButton('Copiar y cerrar', self)
+            splitter.addWidget(lbl)
+        else:
+            button = QPushButton('cerrar', self)
 
-        textEdit = QTextEdit()
-        textEdit.setFocus()
+        button.clicked.connect(self.copy_and_exit)
+        button.setFocusPolicy(Qt.NoFocus)
 
-        splitter.addWidget(textEdit)
+        self.textEdit = QTextEdit()
+        self.textEdit.setFocus()
+
+        splitter.addWidget(self.textEdit)
+        splitter.addWidget(button)
         hbox.addWidget(splitter)
         self.setLayout(hbox)
 
@@ -67,7 +70,8 @@ class SnipNTop(QWidget):
         self.setWindowFlags(self.windowFlags() | Qt.FramelessWindowHint)
         self.show()
 
-    def exit(self, event):
+    def copy_and_exit(self, event):
+        self.clipboard().setText(self.textEdit.toPlainText())
         return self.close()
 
 

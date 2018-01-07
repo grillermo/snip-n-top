@@ -1,8 +1,12 @@
 **Stack**
 
-Shoes.rb
+PyQT5
+
+Script de python
 
 Bettertouch para llamar al script
+
+Automator como wrapper del script de python
 
 **Core features**
 
@@ -11,8 +15,6 @@ Se abre con un shortcut
 La ventana se ajusta al tamaño de la foto y no tiene bordes
 
 Se puede cerrar como cualquier otra ventana
-
-Se abre "on top"
 
 **Nice to haves**
 
